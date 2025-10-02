@@ -433,7 +433,8 @@ Bits Useful for Other Projects
 Roadmap, Todos and Issues
 -------------------------
 
-See https://github.com/Sheik-Mukthar/PriceAndNutritionTrackingSystem/blob/master/TODO.rst
+See https://github.com/Sheik-Mukthar/Nutrition-Analysis-Platform/blob/main/TODO.rst
+
 
 
 
