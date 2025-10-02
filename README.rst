@@ -84,7 +84,7 @@ Targets
    reach each day. As well as daily targets you can also set targets
    for particular meals (e.g. a pre/post workout meal), or special days.
 
-Some example screenshots can be seen at https://github.com/dylanleigh/PriceAndNutritionTrackingSystem/tree/master/screenshots
+Some example screenshots can be seen at https://github.com/Sheik-Mukthar/PriceAndNutritionTrackingSystem/tree/master/screenshots
 
 Other Feature Notes and Tips
 ----------------------------
@@ -434,5 +434,6 @@ Roadmap, Todos and Issues
 -------------------------
 
 See https://github.com/Sheik-Mukthar/PriceAndNutritionTrackingSystem/blob/master/TODO.rst
+
 
 
