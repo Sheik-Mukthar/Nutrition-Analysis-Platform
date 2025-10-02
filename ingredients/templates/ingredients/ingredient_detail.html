@@ -1,0 +1,151 @@
+{% extends 'pants/base.html' %}
+
+{% load css_visuals %}
+
+{% block title %}
+<title>{{ object.name }} - P.A.N.T.S.</title>
+{% endblock %}
+
+{% block headline %}
+<h1>{{ object.name }} - P.A.N.T.S.</h1>
+{% endblock %}
+
+{% block content %}
+
+<p>{{object.description}}</p>
+
+<p>Tags:
+
+{% for tag in object.tags.all %} {# TODO ideally this should be in context with values_list #}
+ <a href="{% url 'ingredient-list-by-tag' tag.name %}">{{ tag.name }}</a>, 
+{% empty %}
+   (none)
+{% endfor %}
+</p>
+
+<p>Typical serving size (g): {{object.serving}}</p>
+
+{% if object.introduction %}
+   <div class="w3-card-4 w3-container">
+      <h3>Introduction:</h3>
+      <p>
+         {{object.introduction|linebreaks}}
+      </p>
+   </div>
+{% endif %}
+
+<div class="w3-card-4 w3-container">
+<h3>Nutrition Data:</h3>
+<table class="w3-table-all w3-hoverable">
+   {% with object.nutrition_data as ndata %}
+      <tr>
+         <th>KJ/kg</th>
+         <th>KCal/kg</th>
+         <th>Prot. g/kg</th>
+         <th>Fibre g/kg</th>
+         <th>Fat g/kg</th>
+         <th>Carb. g/kg</th>
+         <th>Sugar g/kg</th>
+         <th>Min. $/kg</th>
+         <th>Prot. g/J</th>
+         <th>Prot. g/$</th>
+         <th>Fibre g/J</th>
+         <th>Fibre g/$</th>
+         <th>Rank</th>
+      </tr><tr>
+         <td>{{ndata.kilojoules|css_progressbar:30000}}</td>
+         <td>{{ndata.kilocalories|css_progressbar:5000}}</td>
+         <td>{{ndata.protein|css_progressbar:1000}}</td>
+         <td>{{ndata.fibre|default_if_none:"???"|css_progressbar:1000}}</td>
+         <td>{{ndata.fat|default_if_none:" "|css_progressbar:1000}}</td>
+         <td>{{ndata.carbohydrate|default_if_none:" "|css_progressbar:1000}}</td>
+         <td>{{ndata.sugar|default_if_none:" "|css_progressbar:1000}}</td>
+         <td>${{ndata.cost|default_if_none:"?"|floatformat:2}}</td>
+         <td>{{ndata.protein_per_j|css_progressbar:75}}</td>
+         <td>{{ndata.protein_per_cost|css_progressbar:100}}</td>
+         <td>{{ndata.fibre_per_j|css_progressbar:100}}</td>
+         <td>{{ndata.fibre_per_cost|css_progressbar:100}}</td>
+         <td>{{ndata.rank|css_progressbar:5}}</td>
+      </tr>
+      {% if daily_target %}
+         <tr>
+            <th><small>vs <a href="/targets"/>{{ daily_target.name }}</a></small></th>
+            <td>kj from macros:</td>
+            <td>{{ndata.kj_from_prot|css_progressbar:ndata.kilojoules}}</td>
+            <td></td>
+            <td>{{ndata.kj_from_fat|css_progressbar:ndata.kilojoules}}</td>
+            <td>{{ndata.kj_from_carb|css_progressbar:ndata.kilojoules}}</td>
+         </tr><tr>
+         <tr>
+         {% with daily_target.minimum.nutrition_data as min_ndata %}
+            {% with daily_target.maximum.nutrition_data as max_ndata %}
+               <td>{% valminmaxdiv ndata.kilojoules min_ndata.kilojoules max_ndata.kilojoules %} </td>
+               <td>{% valminmaxdiv ndata.kilocalories min_ndata.kilocalories max_ndata.kilocalories %} </td>
+               <td>{% valminmaxdiv ndata.protein min_ndata.protein max_ndata.protein %} </td>
+               <td>{% valminmaxdiv ndata.fibre min_ndata.fibre max_ndata.fibre %} </td>
+               <td>{% valminmaxdiv ndata.fat min_ndata.fat max_ndata.fat %} </td>
+               <td>{% valminmaxdiv ndata.carbohydrate min_ndata.carbohydrate max_ndata.carbohydrate %} </td>
+               <td>{% valminmaxdiv ndata.sugar min_ndata.sugar max_ndata.sugar %} </td>
+               <td>{% valminmaxdiv ndata.cost min_ndata.sugar max_ndata.cost %} </td>
+               <td>{{ndata.protein_per_cost|css_progressbar:max_ndata.protein_per_cost }} </td>
+               <td>{{ndata.fibre_per_cost|css_progressbar:max_ndata.fibre_per_cost }} </td>
+               <td>{{ndata.protein_per_j|css_progressbar:max_ndata.protein_per_j }} </td>
+               <td>{{ndata.fibre_per_j|css_progressbar:max_ndata.fibre_per_j }} </td>
+               <td>{{ndata.rank|css_progressbar:max_ndata.rank}} </td>
+            </tr> <tr>
+               <td><small>{{min_ndata.kilojoules}}-{{max_ndata.kilojoules}}</small></td>
+               <td><small>{{min_ndata.kilocalories}}-{{max_ndata.kilocalories}}</small></td>
+               <td><small>{{min_ndata.protein}}-{{max_ndata.protein}}</small></td>
+               <td><small>{{min_ndata.fibre}}-{{max_ndata.fibre}}</small></td>
+               <td><small>{{min_ndata.fat}}-{{max_ndata.fat}}</small></td>
+               <td><small>{{min_ndata.carbohydrate}}-{{max_ndata.carbohydrate}}</small></td>
+               <td><small>{{min_ndata.sugar}}-{{max_ndata.sugar}}</small></td>
+               <td><small>{{min_ndata.cost}}-{{max_ndata.cost}}</small></td>
+               <td><small>{{min_ndata.protein_per_cost}}-{{max_ndata.protein_per_cost}}</small></td>
+               <td><small>{{min_ndata.fibre_per_cost}}-{{max_ndata.fibre_per_cost}}</small></td>
+               <td><small>{{min_ndata.protein_per_j}}-{{max_ndata.protein_per_j}}</small></td>
+               <td><small>{{min_ndata.fibre_per_j}}-{{max_ndata.fibre_per_j}}</small></td>
+               <td><small>{{min_ndata.rank}}-{{max_ndata.rank}}</small></td>
+            {% endwith %}
+         {% endwith %}
+         </tr>
+      {% endif %}
+   {% endwith %}
+</table>
+</div>
+
+{% if object.notes %}
+   <div class="w3-card-4 w3-container">
+      <h3>Notes:</h3>
+      <p>
+         {{object.notes|linebreaks}}
+      </p>
+   </div>
+{% endif %}
+
+<div class="w3-card-4 w3-container">
+<h3>Prices:</h3>
+<ul>
+   {% for price in object.sorted_prices %}
+      <li>${{ price.per_kg|floatformat:2 }}/kg - {{ price.supplier.name }}
+         (last updated {{ price.updated_at }})</li>
+   {% empty %}
+      No prices listed.
+   {% endfor %}
+</ul>
+</div>
+
+<div class="w3-card-4 w3-container">
+<h3>Used in Recipes:</h3>
+<ul>
+   {% for slug,name in object.used_in_recipes.items %}
+      <li><a href="{% url 'recipe-detail' slug %}">{{ name }}</a></li>
+   {% empty %}
+      Not used in any recipes.
+   {% endfor %}
+</ul>
+</div>
+
+{% endblock %}
+
+
