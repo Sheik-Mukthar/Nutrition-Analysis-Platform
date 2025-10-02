@@ -1,0 +1,18 @@
+{% extends 'pants/base.html' %}
+
+{% block title %}
+<title>Login - Price And Nutrition Tracking System</title>
+{% endblock %}
+
+{% block headline %}
+<h1>Login - Price And Nutrition Tracking System</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+</form>
+{% endblock %}
+
