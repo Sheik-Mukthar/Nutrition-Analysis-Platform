@@ -435,10 +435,3 @@ Roadmap, Todos and Issues
 
 See https://github.com/dylanleigh/PriceAndNutritionTrackingSystem/blob/master/TODO.rst
 
-
-Authors
-=======
-
-Dylan Leigh 2017-2019
-
-
